@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+	<br>
+	<h1>{{post.title}}</h1> <br>
+	{% if post.header_image%}
+	<img src="{{post.header_image.url}}" width="200">
+	<br><br>
+	{% endif %}
+	{{post.body | safe}}
+	<br><br>
+	<hr>
+	{% if user.is_authenticated %}
+	<form action="{% url 'like_post' post.id %}" method="POST">
+		{% csrf_token %}
+		{% if liked %}
+			<button type="submit" class="btn btn-primary btn-sm" name="post_id" value="{{post.id}}">Unlike</button>&nbsp;&nbsp;	{{total_likes}}Likes
+		{% else %}
+			<button type="submit" class="btn btn-primary btn-sm" name="post_id" value="{{post.id}}">Like</button>&nbsp;&nbsp;{{total_likes}}Likes
+		{% endif %}
+
+	</form>
+	{% endif %}
+<br><br>
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-2">
+    {% if post.author.profile.profile_pic %}
+      	<img class="rounded-circle" width="100" height="100" src="{{post.author.profile.profile_pic.url}}">
+    {% else %}
+    	<img class="rounded-circle" width="100" height="100"  src="{% static 'news/images/default_image.jfif' %}">
+    {% endif %}
+    </div>
+    <div class="col-md-10">
+      <div class="card-body">
+        <h5 class="card-title">{{post.author.first_name}}&nbsp;{{post.author.last_name}}</h5>
+        <p class="small text-muted">
+        	<a href="{% url 'show_profile' post.author.profile.id %}">Profile Page</a> |
+        	{% if post.author.profile.website_url %}
+        			<a href="{{post.author.profile.website_url}}">Website</a>  | 
+        	{% endif %}
+
+        	{% if post.author.profile.facebook_url %}
+        			<a href="{{post.author.profile.facebook_url}}">Facebook</a>  | 
+        	{% endif %}
+
+        	{% if post.author.profile.twitter_url %}
+        			<a href="{{post.author.profile.twitter_url}}">Twitter</a>  | 
+        	{% endif %}
+
+        	{% if post.author.profile.instagram_url %}
+        			<a href="{{post.author.profile.instagram_url}}">Instagram</a>  | 
+        	{% endif %}
+
+        	{% if post.author.profile.pinterest_url %}
+        			<a href="{{post.author.profile.pinterest_url}}">Pinterest</a>  
+        	{% endif %}
+        	
+        	
+        </p>
+        <p class="card-text">{{post.author.profile.bio}}.</p>
+        
+      </div>
+    </div>
+  </div>
+</div>
+		
+		<br>
+		{% if user.is_authenticated %}
+		<form action="{% url 'article_detail' post.id %}" method="POST">
+			<textarea required="" class="form form-control" name="comment"></textarea>
+			<br>
+			<input type="hidden" name="post_id" value="{{post.id}}">
+			<input type="hidden" name="user_id" value="{{user.id}}">
+			<button type="submit" class="form form-control btn-secondary">Add Comment</button>
+		</form>
+	{% else %}
+		<h3><a href="{% url 'login' %}">Login </a> to make comment</h3>
+	{% endif %}
+		<br>
+	<h3> All Comments</h3>
+	<br>
+<!-- 		{% if not post.comments.all %}
+			<h4> No Comment Yet</h4>
+		{% else %}
+			{% for comment in post.comments.all %}
+			<div class="card mb-3">
+			 <div class="row g-0">
+			    <div class="col-md-2">
+    				{% if comment.user.profile.profile_pic %}
+      					<img class="rounded-circle" width="100" height="100" src="{{comment.user.profile.profile_pic.url}}">
+    				{% else %}
+    					<img class="rounded-circle" width="100" height="100"  src="{% static 'news/images/default_image.jfif' %}">
+    				{% endif %}
+   			 	</div>
+   			 	<div class="col-md-10">
+      			<div class="card-body">
+      				<h5 class="card-title">{{comment.user.first_name}}&nbsp;{{comment.user.last_name}}</h5>
+      				<p class="card-text">{{comment.body}}</p>
+      				<p class="small text-muted">{{comment.date_added}} </p>
+				</div>
+			</div>
+		</div>
+		</div>
+		<br><br>
+			{% endfor %}
+	
+		{% endif %}
+		 -->
+
+	{% if not comments %}
+			<h6> No Comment Yet</h6>
+		{% else %}
+			{% for comment in comments %}
+			<div class="card mb-3">
+			 <div class="row g-0">
+			    <div class="col-md-2">
+    				{% if comment.user.profile.profile_pic %}
+      					<img class="rounded-circle" width="100" height="100" src="{{comment.user.profile.profile_pic.url}}">
+    				{% else %}
+    					<img class="rounded-circle" width="100" height="100"  src="{% static 'news/images/default_image.jfif' %}">
+    				{% endif %}
+   			 	</div>
+   			 	<div class="col-md-10">
+      			<div class="card-body">
+      				<h5 class="card-title">{{comment.user.first_name}}&nbsp;{{comment.user.last_name}}</h5>
+      				<p class="card-text">{{comment.body}}</p>
+      			<div style="display: flex;">
+      			<p class="small text-muted">{{comment.date_added}} &nbsp;  &nbsp; &nbsp;</p>
+
+      			<form action="{% url 'reply' comment.id %}" method="POST">
+      				{% csrf_token %}
+					<p class="small text-muted"><button type="submit" class="btn btn-basic btn-sm" name="post_id" value="{{comment.id}}">Reply</button>&nbsp;&nbsp;</p>	<!-- {{total_likes}}Likes -->
+      				
+				</form> 
+				</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		<br><br>
+			{% endfor %}
+	
+		{% endif %}
+		
+</div>
+
+
+
+{% endblock %}

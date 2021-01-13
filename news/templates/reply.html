@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container">
+	<br>
+	<h1>Reply {{comment.user }}</h1> <br>
+	
+
+		<div class="card mb-3">
+			 <div class="row g-0">
+			    <div class="col-md-2">
+    				{% if comment.user.profile.profile_pic %}
+      					<img class="rounded-circle" width="100" height="100" src="{{comment.user.profile.profile_pic.url}}">
+    				{% else %}
+    					<img class="rounded-circle" width="100" height="100"  src="{% static 'news/images/default_image.jfif' %}">
+    				{% endif %}
+   			 	</div>
+   			 	<div class="col-md-10">
+      			<div class="card-body">
+      				
+      				<p class="card-text">{{comment.body}}</p>
+				</div>
+			</div>
+		</div>
+		</div>
+		<br><br>
+	<form action="{% url 'reply_comment' comment.id %}" method="POST" >
+		{% csrf_token %}
+		<textarea required="" class="form form-control" name="comment"></textarea>
+		<br>
+		<button type="submit" class="btn btn-primary">Reply</button>
+	</form>
+	<hr>
+	<h3>All Replies</h3>
+	<br>
+	{% for reply in replies %}
+		
+		<div class="card mb-3">
+			 <div class="row g-0">
+			    <div class="col-md-2">
+    				{% if reply.user.profile.profile_pic %}
+      					<img class="rounded-circle" width="50" height="50" src="{{comment.user.profile.profile_pic.url}}">
+    				{% else %}
+    					<img class="rounded-circle" width="50" height="50"  src="{% static 'news/images/default_image.jfif' %}">
+    				{% endif %}
+   			 	</div>
+   			 	<div class="col-md-10">
+      			<div class="card-body">
+      				<h6 class="card-title">{{reply.user.first_name}}&nbsp;{{reply.user.last_name}}</h6>
+      				<p class="card-text">{{reply.body}}</p>
+      				<p class="small text-muted">{{reply.updated}}</p>
+				</div>
+			</div>
+		</div>
+		</div>
+	{% endfor %}
+	
+</div>
+{% endblock %}

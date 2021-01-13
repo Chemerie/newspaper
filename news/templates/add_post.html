@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+	<br>
+	{% if user.is_authenticated %}
+	<h1>Add Post</h1> <br>
+	<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{form.media}}
+		{{form.as_p}}
+		<button class="btn btn-primary">Post</button>
+	</form>
+	<script>
+		var name = '{{user.id}}';
+		document.querySelector("#elder").value = name;
+	</script>
+	{% else %}
+		<h3>You are not supposed to be here and you know it.</h3>
+	{% endif %}
+</div>
+{% endblock %}

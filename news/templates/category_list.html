@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="container">
+		<br>
+		<h1>Categories</h1>
+		<ul>
+		{% for item in cat_menu_list %}
+			<a class="nav-link"  href="{% url 'category' item %}"><li>{{item}}</li></a>
+		{% endfor%}
+		</ul>
+		<button class="btn btn-secondary"><a class="nav-link" href="{% url 'add_category' %}">Add Categories</a>
+</button>
+	</div>
+
+{% endblock %}

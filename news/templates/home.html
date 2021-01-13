@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="container">
+		<br>
+		<h1>All Post</h1>
+		{% for post in object_list %}
+		<div style="width: 50%; ">
+			<a href="{% url 'article_detail' post.id %}">{{post.title_tag}}</a>&nbsp;&nbsp; By {{post.author.last_name}} &nbsp;{{post.publication_date}}&nbsp;&nbsp;<a href="{% url 'category' post.category %}">{{post.category}}</a><br>
+			{% if user.is_authenticated%}
+				{% if post.author.id == user.id%}
+					&nbsp;&nbsp;<a href="{% url 'update_post' post.id %}">Edit</a> &nbsp;&nbsp;<a href="{% url 'delete_post' post.id %}">Delete</a> <br>
+				{% endif %}
+			{% endif %}
+		</div>
+		{% endfor%}
+		
+	</div>
+	
+{% endblock %}
